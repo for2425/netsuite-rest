@@ -12,6 +12,7 @@ class NetsuiteRest {
     this.algorithm = "HMAC-SHA256";
     this.realm = options.realm;
     this.base_url = options.base_url;
+    this.timeout = options.timeout || 60000;
   }
   getAuthorizationHeader(options) {
     const oauth = OAuth({
@@ -59,6 +60,9 @@ class NetsuiteRest {
       method,
       throwHttpErrors: true,
       decompress: true,
+      timeout: {
+    		request: this.timeout
+    	},
       hooks: {
         afterResponse: [
           (response) => {
