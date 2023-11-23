@@ -25,6 +25,7 @@ To set up TBA in Netsuite, see the help topic [Getting Started with Token-based 
     	token: 'token',
     	token_secret: 'token_secret',
     	realm: 'realm'
+        // timeout: '60000' // 1 minute to wait for the request optional default 1 minute
     	//,base_url: 'base_url' // optional
     });
 
