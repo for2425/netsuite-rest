@@ -77,10 +77,11 @@ class NetsuiteRest {
           if (response.statusCode !== 200) {
             return Promise.reject(new Error(response.body));
           }
-                    if (response.body) { 
-          return { 
+          if (response.body) { 
+            return { 
               data: JSON.parse(response.body)  
-          };
+            };
+          }
    
           return {}; 
         })
