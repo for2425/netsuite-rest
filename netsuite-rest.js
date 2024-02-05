@@ -60,17 +60,7 @@ class NetsuiteRest {
       method,
       throwHttpErrors: true,
       decompress: true,
-      open_timeout: this.timeout,
-      hooks: {
-        afterResponse: [
-          (response) => {
-            return {
-              ...response,
-              data: response.body ? JSON.parse(response.body) : null,
-            };
-          },
-        ],
-      },
+      open_timeout: this.timeout
     };
     options.headers = this.getAuthorizationHeader(options);
     if (Object.keys(heads).length > 0) {
@@ -80,13 +70,19 @@ class NetsuiteRest {
       options.body = body;
       options.headers.prefer = "transient";
     }
-      return http(options.method.toLowerCase(), options.url, options.body, options, {
-        json: true
-      })
+    options.json = true; 
+    
+      return http(options.method.toLowerCase(), options.url, options.body, options)
         .then((response) => {
           if (response.statusCode !== 200) {
             return Promise.reject(new Error(response.body));
           }
+                    if (response.body) { 
+          return { 
+              data: JSON.parse(response.body)  
+          };
+   
+          return {}; 
         })
         .catch((e) => Promise.reject(new Error(e.message)));
 
