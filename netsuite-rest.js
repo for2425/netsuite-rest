@@ -1,6 +1,6 @@
 const OAuth = require("oauth-1.0a");
 const crypto = require("crypto");
-var got = require("got");
+const http = require("needle");
 
 class NetsuiteRest {
   constructor(options) {
@@ -60,9 +60,7 @@ class NetsuiteRest {
       method,
       throwHttpErrors: true,
       decompress: true,
-      timeout: {
-    		request: this.timeout
-    	},
+      open_timeout: this.timeout,
       hooks: {
         afterResponse: [
           (response) => {
@@ -82,7 +80,16 @@ class NetsuiteRest {
       options.body = body;
       options.headers.prefer = "transient";
     }
-    return got(options);
+      return http(options.method.toLowerCase(), options.url, options.body, options, {
+        json: true
+      })
+        .then((response) => {
+          if (response.statusCode !== 200) {
+            return Promise.reject(new Error(response.body));
+          }
+        })
+        .catch((e) => Promise.reject(new Error(e.message)));
+
   }
 }
 module.exports = NetsuiteRest;
